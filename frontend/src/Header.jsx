@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import reactLogo from "./assets/vite-deno.svg";
 
 export default function Header() {
   const [email, setEmail] = useState(null);
@@ -18,7 +19,7 @@ export default function Header() {
   return (
     <div className="header">
       <a href="/" className="logo">
-        <img src="/logo512.png" alt="Logo" />
+        <img src={reactLogo} alt="React Logo" />
       </a>
       <div className="contentButtons">
         {email ? (
