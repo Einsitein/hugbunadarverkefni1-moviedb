@@ -3,6 +3,8 @@ package is.hi.moviedb.controller;
 import is.hi.moviedb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 class RegisterRequest {
     private String email;
@@ -80,20 +82,26 @@ public class UserController {
 
     // Registration endpoint
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-        return userService.register(request.getEmail(), request.getPassword());
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+        String result = userService.register(request.getEmail(), request.getPassword());
+        if (result.equals("User already registered!")) {
+            return new ResponseEntity<>(result, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // Login endpoint
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        return userService.login(request.getEmail(), request.getPassword());
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        String result = userService.login(request.getEmail(), request.getPassword());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Change password endpoint
     @PatchMapping("/password")
-    public String changePassword(@RequestBody ChangePasswordRequest request) {
-        return userService.change_password(request.getAccessToken(), request.getNewPassword());
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+        String result = userService.change_password(request.getAccessToken(), request.getNewPassword());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }
