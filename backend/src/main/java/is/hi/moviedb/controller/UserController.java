@@ -80,7 +80,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Registration endpoint
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         String result = userService.register(request.getEmail(), request.getPassword());
@@ -90,18 +89,15 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    // Login endpoint
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         String result = userService.login(request.getEmail(), request.getPassword());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // Change password endpoint
     @PatchMapping("/password")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
-        String result = userService.change_password(request.getAccessToken(), request.getNewPassword());
+        String result = userService.changePassword(request.getAccessToken(), request.getNewPassword());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }
