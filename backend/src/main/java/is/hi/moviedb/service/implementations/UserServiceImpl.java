@@ -10,46 +10,63 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+  private final UserRepository userRepository;
+  private final JwtUtil jwtUtil;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.jwtUtil = new JwtUtil();
+  @Autowired
+  public UserServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
+    this.jwtUtil = new JwtUtil();
+  }
+
+  @Override
+  public String register(String email, String password) {
+    if (userRepository.findByEmail(email) != null) {
+      return "User already registered!";
+    }
+    User newUser = new User();
+    newUser.setEmail(email);
+    newUser.setPassword(password);
+    userRepository.save(newUser);
+    return "User registered successfully!";
+  }
+
+  @Override
+  public String login(String email, String password) {
+    User user = userRepository.findByEmail(email);
+    if (user == null || !user.getPassword().equals(password)) {
+      return "Invalid email or password!";
+    }
+    String token = jwtUtil.generateToken(email);
+    return token;
+  }
+
+  @Override
+  public String changePassword(String accessToken, String newPassword) {
+    String email = jwtUtil.verifyToken(accessToken);
+    if (email == null) {
+      return "Invalid access token!";
+    }
+    User user = userRepository.findByEmail(email);
+    user.setPassword(newPassword);
+    userRepository.save(user);
+    return "Password changed successfully!";
+  }
+
+  @Override
+  public String deleteUser(String accessToken) {
+    String email = jwtUtil.verifyToken(accessToken);
+    if (email == null) {
+      return "Invalid access token!";
     }
 
-    @Override
-    public String register(String email, String password) {
-        if (userRepository.findByEmail(email) != null) {
-            return "User already registered!";
-        }
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-        userRepository.save(newUser);
-        return "User registered successfully!";
+    User user = userRepository.findByEmail(email);
+
+    if (user == null) {
+      return "User not found";
     }
 
-    @Override
-    public String login(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user == null || !user.getPassword().equals(password)) {
-            return "Invalid email or password!";
-        }
-        String token = jwtUtil.generateToken(email);
-        return token;
-    }
-
-    @Override
-    public String changePassword(String accessToken, String newPassword) {
-        String email = jwtUtil.verifyToken(accessToken);
-        if (email == null) {
-            return "Invalid access token!";
-        }
-        User user = userRepository.findByEmail(email);
-        user.setPassword(newPassword);
-        userRepository.save(user);
-        return "Password changed successfully!";
-    }
+    userRepository.delete(user);
+    return "User deleted successfully!";
+  }
 }
