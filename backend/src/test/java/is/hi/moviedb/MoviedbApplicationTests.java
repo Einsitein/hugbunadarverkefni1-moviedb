@@ -18,11 +18,4 @@ class MoviedbApplicationTests {
 	void contextLoads() throws Exception {
     assertThat(userController).isNotNull();
   }
-
-  @Test
-  void userController_test() throws Exception{
-    userController.register("{email: bla}")
-  }
-
-
 }

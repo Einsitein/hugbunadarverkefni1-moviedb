@@ -69,4 +69,14 @@ public class UserServiceImpl implements UserService {
     userRepository.delete(user);
     return "User deleted successfully!";
   }
+
+  @Override
+  public String getUser(String accessToken){
+    String email = jwtUtil.verifyToken(accessToken);
+    if (email == null) {
+      return "Invalid access token!";
+    }
+    User user = userRepository.findByEmail(email);
+    return "nice cock bro";
+  }
 }

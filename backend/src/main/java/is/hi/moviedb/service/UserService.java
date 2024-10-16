@@ -7,5 +7,7 @@ public interface UserService {
 
     String changePassword(String accessToken, String newPassword);
     
-    String deleteUser(String email);
+    String deleteUser(String accessToken);
+
+    String getUser(String accessToken);
 }

@@ -82,6 +82,18 @@ class DeleteMeRequest {
 
 }
 
+class GetMeRequest {
+  private String accessToken;
+
+  public String getAccessToken() {
+    return accessToken;
+  }
+
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
+}
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
