@@ -20,7 +20,7 @@ public class Review {
     }
 
     public Review(Long userId,Long movieId,String movieReview,double rating) {
-        this.id = String.valueOf(userId) + String.valueOf(movieId);
+        this.id = String.valueOf(userId) + "-" + String.valueOf(movieId);
         this.userId = userId;
         this.movieId = movieId;
         this.movieReview = movieReview;

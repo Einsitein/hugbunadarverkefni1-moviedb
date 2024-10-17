@@ -19,7 +19,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public Review createReview(Long userId,Long movieId,String movieReview,double rating){
+    public Review createReview(long userId,long movieId,String movieReview,double rating){
         Review review = new Review(userId,movieId,movieReview,rating);
         reviewRepository.save(review);
         return review;
@@ -35,33 +35,52 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public Review changeReview(Long userId,Long movieId,String movieReview,double rating){
-        Review review = reviewRepository.findById(Long.toString(userId) + Long.toString(movieId));
+    public Review changeReview(long userId,long movieId,String movieReview,double rating){
+        Review review = reviewRepository.findById(Long.toString(userId) + "-" + Long.toString(movieId));
         review.setRating(rating);
         review.setMovieReview(movieReview);
         reviewRepository.save(review);
-        return review;
+        if (review != null){
+            return review;
+        }
+        return null;
     };
 
 
-    public Review findById(long userId,long movieId){
-        Review review = reviewRepository.findById(String.valueOf(userId) + String.valueOf(movieId));
+    public Review findByUserIdAndMovieId(long userId,long movieId){
+        Review review = reviewRepository.findByUserIdAndMovieId(userId,movieId);
         if (review != null){
             return review;
         }
         return null;
     }
-    /*
-    public List<Review> findByUserid(long userId){
+
+    public Review findById(String id){
+        Review review = reviewRepository.findById(id);
+        if (review != null){
+            return review;
+        }
         return null;
-    };
-    public List<Review> findByMovieid(long movieId){
+    }
+    public List<Review> findByUserId(long userId){
+        List<Review> reviews = reviewRepository.findByUserId(userId);
+        if (reviews != null){
+            return reviews;
+        }
         return null;
-    };
+    }
+    public List<Review> findByMovieId(long movieId){
+        List<Review> reviews = reviewRepository.findByMovieId(movieId);
+        if (reviews != null){
+            return reviews;
+        }
+        return null;
+    }
     public List<Review> findAll(){
+        List<Review> reviews = reviewRepository.findAll();
+        if (reviews != null){
+            return reviews;
+        }
         return null;
     };
-
-     */
-
 }
