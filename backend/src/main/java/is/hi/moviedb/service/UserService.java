@@ -10,4 +10,6 @@ public interface UserService {
     String deleteUser(String accessToken);
 
     String getUser(String accessToken);
+    
+    String getAllUsers();
 }

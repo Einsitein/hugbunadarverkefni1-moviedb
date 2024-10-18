@@ -59,24 +59,24 @@ public class UserServiceImpl implements UserService {
     if (email == null) {
       return "Invalid access token!";
     }
-
     User user = userRepository.findByEmail(email);
-
-    if (user == null) {
-      return "User not found";
-    }
-
     userRepository.delete(user);
     return "User deleted successfully!";
   }
 
   @Override
-  public String getUser(String accessToken){
+  public User getUser(String accessToken){
     String email = jwtUtil.verifyToken(accessToken);
     if (email == null) {
-      return "Invalid access token!";
+      return null;
     }
     User user = userRepository.findByEmail(email);
-    return "nice cock bro";
+    return user;
+  }
+
+  @Override
+  public List<User> getAllUsers(){
+    List<User> users = userRepository.findAll();
+    return users;
   }
 }

@@ -69,19 +69,6 @@ class ChangePasswordRequest {
   }
 }
 
-class DeleteMeRequest {
-  private String accessToken;
-
-  public String getAccessToken() {
-    return accessToken;
-  }
-
-  public void setAccessToken(String accessToken) {
-    this.accessToken = accessToken;
-  }
-
-}
-
 class GetMeRequest {
   private String accessToken;
 
@@ -126,12 +113,29 @@ public class UserController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @DeleteMapping
-  public ResponseEntity<String> deleteMe(@RequestBody DeleteMeRequest request) {
+  @DeleteMapping("/me")
+  public ResponseEntity<String> deleteMe(
+    @RequestBody GetMeRequest request
+  ) {
     String result = userService.deleteUser(request.getAccessToken());
-    if (result.equals("User not found")) {
-      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+    if (result = "Invalid access token!") {
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  @GetMapping("/me")
+  public ResponseEntity<User> getMe( @RequestBody GetMeRequest request){
+    User result = userService.getUser(request.getAccessToken());
+    if (result == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  } 
+
+  @GetMapping("/users")
+  public ResponseEntity<List<User>> getAllUsers() {
+    List<User> result = userService.getAllUsers();
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 }
