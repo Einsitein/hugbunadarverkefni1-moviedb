@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 @Table(name = "reviews") //Specify table name in database
 public class Review {
 
+    /** id is a String that is made up of userId and movieId with a '-' inbetween
+     *  Example: userId = 10, movieId = 99, then id = "10-99"
+     * */
     @Id
     private String id;
     private Long userId;
@@ -15,10 +18,11 @@ public class Review {
     private String movieReview;
     private double rating;
 
-    //Constructor
+    /** Empty constructor */
     public Review(){
     }
 
+    /** Constructor */
     public Review(Long userId,Long movieId,String movieReview,double rating) {
         this.id = String.valueOf(userId) + "-" + String.valueOf(movieId);
         this.userId = userId;
@@ -28,6 +32,7 @@ public class Review {
     }
 
 
+    /** Getters and setters */
     public String getId() {
         return id;
     }
