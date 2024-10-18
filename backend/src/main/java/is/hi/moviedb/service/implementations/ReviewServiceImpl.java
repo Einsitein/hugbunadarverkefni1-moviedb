@@ -83,4 +83,37 @@ public class ReviewServiceImpl implements ReviewService{
         }
         return null;
     };
+
+    public boolean deleteAll(){
+        if (reviewRepository.findAll() != null) {
+            reviewRepository.deleteAll();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public double findRatingById(String id){
+        Review review = findById(id);
+        if (review != null){
+            return review.getRating();
+        } else {
+            return -1.0;
+        }
+    }
+
+    public double findAverageRatingByMovieId(long movieId){
+        List<Review> reviews = findByMovieId(movieId);
+        double total = 0.0;
+        int count = 0;
+        for (Review review : reviews) {
+            total += review.getRating();
+            System.out.println("0");
+        }
+        count = reviews.size();
+        if (0 < count) {
+            return total/count;
+        } else {
+            return -1.0;
+        }
+    }
 }

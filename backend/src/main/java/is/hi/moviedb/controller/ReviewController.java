@@ -96,4 +96,35 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @DeleteMapping(value = "/deleteAll")
+    public ResponseEntity<Void> deleteAll(){
+        boolean isDeleted = reviewService.deleteAll();
+        if (isDeleted) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+    }
+
+    @GetMapping(value = "/findRating/{id}")
+    public ResponseEntity<Double> findRatingById(@PathVariable String id) {
+        Double rating = reviewService.findRatingById(id); // Assuming this returns a Double
+
+        if (rating != null && rating >= 0.0) { // Check for null and if rating is non-negative
+            return ResponseEntity.ok(rating); // Return the rating with 200 OK status
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 if not found
+        }
+    }
+
+    @GetMapping(value = "/findAverageRatingByMovieId/{movieId}")
+    public ResponseEntity<Double> findAverageRatingByMovieId(@PathVariable long movieId) {
+        Double averageRating = reviewService.findAverageRatingByMovieId(movieId); // Assuming this returns a Double
+        if (averageRating != null && averageRating >= 0.0) { // Check for null and if rating is non-negative
+            return ResponseEntity.ok(averageRating); // Return the rating with 200 OK status
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 if not found
+        }
+    }
 }

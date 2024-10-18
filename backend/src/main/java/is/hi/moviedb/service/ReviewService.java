@@ -12,5 +12,7 @@ public interface ReviewService {
     List<Review> findByUserId(long userId);
     List<Review> findByMovieId(long movieId);
     List<Review> findAll();
-
+    boolean deleteAll();
+    double findRatingById(String id);
+    double findAverageRatingByMovieId(long movieId);
 }
