@@ -15,4 +15,7 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
     List<Review> findAll();
     List<Review> findByUserId(Long userId);
     List<Review> findByMovieId(Long movieId);
+    double findRatingById(String id);
+    void deleteAll();
+    double findAverageRatingByMovieId(long movieId);
 }
