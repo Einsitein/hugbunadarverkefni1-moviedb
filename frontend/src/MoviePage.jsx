@@ -6,13 +6,36 @@ import { jwtDecode } from "jwt-decode";
 export default function MoviePage() {
   const { movieid } = useParams();
   const [movie, setMovie] = useState(null);
-  const [avgRating, setAvgRating] = useState("...Nobody has rated this movie yet :(");
+  const [avgRating, setAvgRating] = useState(
+    "...Nobody has rated this movie yet :("
+  );
   const [myRating, setMyRating] = useState(null);
   const [userid, setUserId] = useState(null);
   const token = localStorage.getItem("token");
   const email = jwtDecode(token).sub;
   console.log(email);
   const baseURL = "http://localhost:8080/";
+
+  const getUserId = async () => {
+    const user_id_response = await axios.post(baseURL + "user/idbyemail", {
+      email,
+    });
+    const user_id_tmp = user_id_response.data;
+    setUserId(user_id_tmp);
+    return user_id_tmp;
+  };
+
+  const fetchAvgRating = async () => {
+    try {
+      const response = await axios.get(
+        baseURL + `review/findAverageRatingByMovieId/${movieid}`
+      );
+      console.log(response.data);
+      setAvgRating(response.data);
+    } catch (error) {
+      console.error("There was an unknown error!", error);
+    }
+  };
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -24,30 +47,13 @@ export default function MoviePage() {
         console.error("There was an unknown error!", error);
       }
     };
-    const fetchAvgRating = async () => {
-      try {
-        const response = await axios.get(
-          baseURL + `review/findAverageRatingByMovieId/${movieid}`
-        );
-        console.log(response.data);
-        setAvgRating(response.data);
-      } catch (error) {
-        console.error("There was an unknown error!", error);
-      }
-    };
+
     const fetchMyRating = async () => {
-      let user_id = null;
-      try {
-        const user_id_response = await axios.get(baseURL + `users/${email}`);
-        user_id = user_id_response.data.id;
-        setUserId(user_id);
-      } catch (error) {
-        console.error("There was an unknown error!", error);
+      let user_id = userid;
+      if (!userid) {
+        user_id = await getUserId();
       }
       try {
-        if (user_id === null) {
-          return;
-        }
         const response = await axios.get(
           baseURL + `review/findByUserIdAndMovieId/${user_id}/${movieid}`
         );
@@ -63,41 +69,71 @@ export default function MoviePage() {
   }, [movieid, token]);
 
   const handleDeleteRating = async () => {
+    let user_id = userid;
+    if (!userid) {
+      user_id = await getUserId();
+    }
     try {
-      await axios.delete(baseURL + `review/deleteReview/${userid}-${movieid}`);
+      await axios.delete(baseURL + `review/deleteReview/${user_id}-${movieid}`);
       setMyRating(null);
+      await fetchAvgRating();
     } catch (error) {
       console.error("Error deleting rating", error);
     }
   };
 
   const handleChangeRating = async (newRating) => {
+    if (!newRating) {
+      return;
+    }
+    if (newRating < 1 || newRating > 10) {
+      alert("Rating must be between 1 and 10!");
+      return;
+    }
+    let user_id = userid;
+    if (!userid) {
+      user_id = await getUserId();
+    }
     try {
-      await axios.patch(baseURL + `review//changeReview`, {
-        userid,
-        movieid,
-        movie_review: "",
+      await axios.patch(baseURL + `review/changeReview`, {
+        userId: user_id,
+        movieId: movieid,
+        movieReview: "",
         rating: newRating,
       });
       setMyRating(newRating);
+      await fetchAvgRating();
     } catch (error) {
       console.error("Error changing rating", error);
     }
   };
 
   const handleSetRating = async (newRating) => {
+    if (!newRating) {
+      return;
+    }
+    if (newRating < 1 || newRating > 10) {
+      alert("Rating must be between 1 and 10!");
+      return;
+    }
+    let user_id = userid;
+    if (!userid) {
+      user_id = await getUserId();
+    }
     try {
-      await axios.post(baseURL + `review/createReview/`, {
-        userid,
-        movieid,
-        movie_review: "",
-        rating: newRating,
+      await axios.post(baseURL + "review/createReview", {
+        userId: `${user_id}`,
+        movieId: `${movieid}`,
+        movieReview: "",
+        rating: `${newRating}`,
       });
       setMyRating(newRating);
+      await fetchAvgRating();
     } catch (error) {
       console.error("Error setting rating", error);
     }
   };
+
   if (!movie) {
     return <div>Loading...</div>;
   }

@@ -86,6 +86,20 @@ class GetMeRequest {
   }
 }
 
+class EmailRequest {
+    private String email;
+
+    // Getters and setters
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -122,9 +136,12 @@ public class UserController {
 
   @DeleteMapping("/me")
   public ResponseEntity<String> deleteMe(
-    @RequestBody GetMeRequest request
+    @RequestHeader("Authorization") String accessToken
   ) {
-    String result = userService.deleteUser(request.getAccessToken());
+    if (accessToken.startsWith("Bearer ")) {
+      accessToken = accessToken.substring(7);
+    }
+    String result = userService.deleteUser(accessToken);
     if (result == "Invalid access token!") {
       return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
@@ -132,8 +149,12 @@ public class UserController {
   }
 
   @GetMapping("/me")
-  public ResponseEntity<User> getMe( @RequestBody GetMeRequest request){
-    User result = userService.getMe(request.getAccessToken());
+  public ResponseEntity<User> getMe(@RequestHeader("Authorization") String accessToken) {
+    if (accessToken.startsWith("Bearer ")) {
+      accessToken = accessToken.substring(7);
+    }
+    System.out.println("Access Token: " + accessToken);
+    User result = userService.getMe(accessToken);
     if (result == null) {
       return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
@@ -154,16 +175,16 @@ public class UserController {
     if(result == null){
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    return new ResponseEntity<>(HttpStatus.FOUND); 
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-
-  @GetMapping("/users")
-  public ResponseEntity<Long> getEmailById(@RequestParam String email){
-    Long result = userService.getUserId(email);
-    if(result == null){
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+@PostMapping("/idbyemail")
+public ResponseEntity<Long> getEmailById(@RequestBody EmailRequest emailRequest) {
+    Long result = userService.getUserId(emailRequest.getEmail());
+    if (result == null) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    return new ResponseEntity<>(result, HttpStatus.FOUND);
-  }
+    return new ResponseEntity<>(result, HttpStatus.OK);
+}
+
 }
