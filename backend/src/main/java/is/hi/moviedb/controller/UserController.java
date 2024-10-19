@@ -1,5 +1,10 @@
 package is.hi.moviedb.controller;
 
+import java.util.List;
+import is.hi.moviedb.model.User;
+
+import is.hi.moviedb.model.Review;
+import is.hi.moviedb.service.ReviewService;
 import is.hi.moviedb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -7,135 +12,158 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 class RegisterRequest {
-    private String email;
-    private String password;
+  private String email;
+  private String password;
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 }
 
 class LoginRequest {
-    private String email;
-    private String password;
+  private String email;
+  private String password;
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 }
 
 class ChangePasswordRequest {
-    private String accessToken;
-    private String newPassword;
+  private String accessToken;
+  private String newPassword;
 
-    public String getAccessToken() {
-        return accessToken;
-    }
+  public String getAccessToken() {
+    return accessToken;
+  }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
 
-    public String getNewPassword() {
-        return newPassword;
-    }
+  public String getNewPassword() {
+    return newPassword;
+  }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
+  }
 }
 
 class GetMeRequest {
-    private String accessToken;
+  private String accessToken;
 
-    public String getAccessToken() {
-        return accessToken;
-    }
+  public String getAccessToken() {
+    return accessToken;
+  }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
 }
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
+  private final ReviewService reviewService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+  @Autowired
+  public UserController(UserService userService, ReviewService reviewService) {
+    this.userService = userService;
+    this.reviewService = reviewService;
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    String result = userService.register(request.getEmail(), request.getPassword());
+    if (result.equals("User already registered!")) {
+      return new ResponseEntity<>(result, HttpStatus.CONFLICT);
     }
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
+  }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        String result = userService.register(request.getEmail(), request.getPassword());
-        if (result.equals("User already registered!")) {
-            return new ResponseEntity<>(result, HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+  @PostMapping("/login")
+  public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    String result = userService.login(request.getEmail(), request.getPassword());
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  @PatchMapping("/password")
+  public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+    String result = userService.changePassword(request.getAccessToken(), request.getNewPassword());
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  @DeleteMapping("/me")
+  public ResponseEntity<String> deleteMe(
+    @RequestBody GetMeRequest request
+  ) {
+    String result = userService.deleteUser(request.getAccessToken());
+    if (result == "Invalid access token!") {
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        String result = userService.login(request.getEmail(), request.getPassword());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+  @GetMapping("/me")
+  public ResponseEntity<User> getMe( @RequestBody GetMeRequest request){
+    User result = userService.getMe(request.getAccessToken());
+    if (result == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  } 
 
-    @PatchMapping("/password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
-        String result = userService.changePassword(request.getAccessToken(), request.getNewPassword());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+  @GetMapping("/users")
+  public ResponseEntity<List<User>> getAllUsers() {
+    List<User> result = userService.getAllUsers();
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  @GetMapping("/users/{user_id}/movies/ratings")
+  public ResponseEntity<List<Review>> getAllRatingsOfUser(
+    @PathVariable String user_id
+  ) {
+    List<Review> result = reviewService.findByUserId(Long.parseLong(user_id));
+    if(result == null){
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    return new ResponseEntity<>(HttpStatus.FOUND); 
+  }
 
-    @DeleteMapping("/me")
-    public ResponseEntity<String> deleteMe(
-        @RequestBody GetMeRequest request
-    ) {
-        String result = userService.deleteUser(request.getAccessToken());
-        if (result = "Invalid access token!") {
-            return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+
+  @GetMapping("/users")
+  public ResponseEntity<Long> getEmailById(@RequestParam String email){
+    Long result = userService.getUserId(email);
+    if(result == null){
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    @GetMapping("/me")
-    public ResponseEntity<User> getMe( @RequestBody GetMeRequest request){
-        User result = userService.getUser(request.getAccessToken());
-        if (result == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    } 
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> result = userService.getAllUsers();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(result, HttpStatus.FOUND);
+  }
 }

@@ -1,5 +1,8 @@
 package is.hi.moviedb.service;
 
+import is.hi.moviedb.model.User;
+import java.util.List;
+
 public interface UserService {
     String register(String email, String password);
 
@@ -9,7 +12,10 @@ public interface UserService {
     
     String deleteUser(String accessToken);
 
-    String getUser(String accessToken);
+    User getMe(String accessToken);
     
-    String getAllUsers();
+    List<User> getAllUsers();
+
+    Long getUserId(String email);
+
 }
