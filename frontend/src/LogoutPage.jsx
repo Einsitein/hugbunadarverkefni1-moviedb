@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 export default function LogoutPage() {
     useEffect(() => {
         localStorage.removeItem('token');
-        window.location.href = '/';
+        globalThis.location.href = '/';
     }, []);
     
     return (

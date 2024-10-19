@@ -28,7 +28,7 @@ export default function AuthPage() {
         }
         console.log(token);
         localStorage.setItem("token", token);
-        window.location.href = "/";
+        globalThis.location.href = "/";
       } else if (signup) {
         alert("User registered!");
         setEmail("");
