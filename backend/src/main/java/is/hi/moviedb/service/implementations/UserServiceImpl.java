@@ -52,4 +52,31 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return "Password changed successfully!";
     }
+
+    @Override
+    public String deleteUser(String accessToken) {
+        String email = jwtUtil.verifyToken(accessToken);
+        if (email == null) {
+            return "Invalid access token!";
+        }
+        User user = userRepository.findByEmail(email);
+        userRepository.delete(user);
+        return "User deleted successfully!";
+    }
+
+    @Override
+    public User getUser(String accessToken){
+        String email = jwtUtil.verifyToken(accessToken);
+        if (email == null) {
+            return null;
+        }
+        User user = userRepository.findByEmail(email);
+        return user;
+    }
+
+    @Override
+    public List<User> getAllUsers(){
+        List<User> users = userRepository.findAll();
+        return users;
+    }
 }

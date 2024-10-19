@@ -6,4 +6,10 @@ public interface UserService {
     String login(String email, String password);
 
     String changePassword(String accessToken, String newPassword);
+    
+    String deleteUser(String accessToken);
+
+    String getUser(String accessToken);
+    
+    String getAllUsers();
 }

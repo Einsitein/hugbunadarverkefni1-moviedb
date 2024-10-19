@@ -69,6 +69,18 @@ class ChangePasswordRequest {
     }
 }
 
+class GetMeRequest {
+    private String accessToken;
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+}
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -98,6 +110,32 @@ public class UserController {
     @PatchMapping("/password")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
         String result = userService.changePassword(request.getAccessToken(), request.getNewPassword());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteMe(
+        @RequestBody GetMeRequest request
+    ) {
+        String result = userService.deleteUser(request.getAccessToken());
+        if (result = "Invalid access token!") {
+            return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> getMe( @RequestBody GetMeRequest request){
+        User result = userService.getUser(request.getAccessToken());
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    } 
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> result = userService.getAllUsers();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
