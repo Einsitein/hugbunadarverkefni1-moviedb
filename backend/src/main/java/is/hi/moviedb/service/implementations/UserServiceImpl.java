@@ -9,9 +9,16 @@ import is.hi.moviedb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service implementation for managing {@link User} entities.
+ * Implements the {@link UserService} interface to provide business logic for movie operations.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
+  /**
+   * Repository for performing CRUD operations on {@link User} entities.
+   */
   private final UserRepository userRepository;
   private final JwtUtil jwtUtil;
 
@@ -21,6 +28,14 @@ public class UserServiceImpl implements UserService {
     this.jwtUtil = new JwtUtil();
   }
 
+  /**
+   * Creates a new {@link User} entitiy 
+   *
+   * @param email the email of the user to be created
+   * @param password password for the User
+   *
+   * @return a String indicating if User exists or has been registered successfully.
+   */
   @Override
   public String register(String email, String password) {
     if (userRepository.findByEmail(email) != null) {
@@ -33,6 +48,14 @@ public class UserServiceImpl implements UserService {
     return "User registered successfully!";
   }
 
+  /**
+   * logs in a user, and creates a access token.
+   *
+   * @param email the email of the user 
+   * @param password password of the User
+   *
+   * @return a token indicating the user has been logged in
+   */
   @Override
   public String login(String email, String password) {
     User user = userRepository.findByEmail(email);
@@ -55,6 +78,13 @@ public class UserServiceImpl implements UserService {
     return "Password changed successfully!";
   }
 
+
+  /**
+   * Deletes a user by it's email
+   *
+   * @param accessToken a token containing the email of the user currently logged in.
+   * @return String message.
+   */
   @Override
   public String deleteUser(String accessToken) {
     String email = jwtUtil.verifyToken(accessToken);
@@ -66,6 +96,12 @@ public class UserServiceImpl implements UserService {
     return "User deleted successfully!";
   }
 
+  /**
+   * retrieves a {@link User} by it's email
+   *
+   * @param accessToken a token containing the email of the user currently logged in.
+   * @return {@link User} entitiy
+   */
   @Override
   public User getMe(String accessToken){
     String email = jwtUtil.verifyToken(accessToken);
@@ -76,12 +112,23 @@ public class UserServiceImpl implements UserService {
     return user;
   }
 
+  /**
+   * retrieves all users
+   * 
+   * @return a List of {@link User} objects
+   */
   @Override
   public List<User> getAllUsers(){
     List<User> users = userRepository.findAll();
     return users;
   } 
 
+  /**
+   * retrieves UserId by email
+   *
+   * @param email of the user
+   * @return User id of the user.
+   */
   @Override
   public Long getUserId(String email){
     User user = userRepository.findByEmail(email);

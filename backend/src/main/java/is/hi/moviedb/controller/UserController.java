@@ -99,7 +99,15 @@ class EmailRequest {
     }
 }
 
-
+/**
+ * Controller class for handling HTTP requests related to users.
+ * Provides endpoints to,
+ * - create account
+ * - log into account
+ * - change password
+ * - get account that is currently logged in.
+ * - etc.
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -134,6 +142,11 @@ public class UserController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+  /**
+   * Deltes currently logged in user
+   *
+   * @return a response endity that indicates if account was deleted.
+   */
   @DeleteMapping("/me")
   public ResponseEntity<String> deleteMe(
     @RequestHeader("Authorization") String accessToken
@@ -148,6 +161,12 @@ public class UserController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+
+  /**
+   * Retrieves a responseEntity with all information about User
+   *
+   * @return a responseEntity<User> for the currently logged in user
+   */
   @GetMapping("/me")
   public ResponseEntity<User> getMe(@RequestHeader("Authorization") String accessToken) {
     if (accessToken.startsWith("Bearer ")) {
@@ -161,12 +180,23 @@ public class UserController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   } 
 
+
+  /**
+   * Retrieves a list of all users.
+   *
+   * @return a list of ResponseEntity<User> objects.
+   */
   @GetMapping("/users")
   public ResponseEntity<List<User>> getAllUsers() {
     List<User> result = userService.getAllUsers();
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves a list of all Reviews a given user has created.
+   *
+   * @return a list of ResponseEntity<List<User>> objects.
+   */
   @GetMapping("/users/{user_id}/movies/ratings")
   public ResponseEntity<List<Review>> getAllRatingsOfUser(
     @PathVariable String user_id
@@ -178,13 +208,13 @@ public class UserController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-@PostMapping("/idbyemail")
-public ResponseEntity<Long> getEmailById(@RequestBody EmailRequest emailRequest) {
-    Long result = userService.getUserId(emailRequest.getEmail());
-    if (result == null) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    return new ResponseEntity<>(result, HttpStatus.OK);
-}
+  @PostMapping("/idbyemail")
+  public ResponseEntity<Long> getEmailById(@RequestBody EmailRequest emailRequest) {
+      Long result = userService.getUserId(emailRequest.getEmail());
+      if (result == null) {
+          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+      return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 
 }
