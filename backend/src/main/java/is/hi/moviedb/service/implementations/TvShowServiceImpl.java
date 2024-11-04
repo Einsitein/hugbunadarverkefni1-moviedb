@@ -6,6 +6,7 @@ import is.hi.moviedb.service.TvShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TvShowServiceImpl implements TvShowService {
@@ -21,4 +22,14 @@ public class TvShowServiceImpl implements TvShowService {
     public List<TvShow> getAllTvShows() {
         return tvShowRepository.findAll();
     }
+
+    @Override
+    public List<TvShow> searchTvShowsByName(String searchString) {
+        return tvShowRepository.findByNameContainingIgnoreCase(searchString);
+    }
+
+    @Override
+    public TvShow getTvShowById(int id) {
+      return tvShowRepository.findById(id).orElse(null);
+  }
 }

@@ -3,11 +3,7 @@ package is.hi.moviedb.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 
-/**
- * Entity class representing a TV show in the database.
- */
 @Entity
 @Table(name = "tv_show")
 public class TvShow {
@@ -21,11 +17,12 @@ public class TvShow {
     private String images;
     private String type;
     private String creators;
+    private Double rating;
 
     // Constructors
     public TvShow() {}
 
-    public TvShow(int id, String name, String description, String genre, String images, String type, String creators) {
+    public TvShow(int id, String name, String description, String genre, String images, String type, String creators, Double rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -33,9 +30,10 @@ public class TvShow {
         this.images = images;
         this.type = type;
         this.creators = creators;
+        this.rating = rating;
     }
 
-    // Getters and setters
+    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -56,4 +54,7 @@ public class TvShow {
 
     public String getCreators() { return creators; }
     public void setCreators(String creators) { this.creators = creators; }
+
+    public Double getRating() { return rating != null ? rating : 0.0; }
+    public void setRating(Double rating) { this.rating = rating; }
 }
