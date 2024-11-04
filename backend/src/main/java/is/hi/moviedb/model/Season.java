@@ -8,6 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 
+
+/**
+ * Entity class representing a Season in a TV show.
+ */
 @Entity
 @Table(name = "season")
 public class Season {
@@ -20,7 +24,7 @@ public class Season {
     private Double rating;
 
     @ManyToOne
-    @JoinColumn(name = "show_id", nullable = false) // Correct foreign key mapping
+    @JoinColumn(name = "show_id", nullable = false) 
     private TvShow tvShow;
 
     // Constructors
