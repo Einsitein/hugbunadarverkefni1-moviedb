@@ -1,6 +1,6 @@
 # MovieDB 
 
-# Verkefni 4 - Total difficulty: 22, with 10 easy, 3 medium, 2 hard
+# Verkefni 4 - Total difficulty: 22
 
 ## TV Shows/Seasons/Episodes (Difficulty: 7)
 - [X] **GET /tvshows**: Retrieve all TV shows in a list [1]
@@ -12,16 +12,16 @@
 - [X] **GET /tvshows/{id}/season/{id}/episode/{id}**: Retrieve an episode’s info by ID [1]
 
 ## Media Rating (Difficulty: 9)
-- [] **POST /tvshows/{id}/rating**: Rate a TV show [2]
-- [] **GET /tvshows/{id}/rating**: Retrieve a TV show’s rating [1]
-- [] **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
-- [] **GET /tvshows/{id}/season/{id}/rating**: Retrieve a season’s rating [1]
-- [] **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
-- [] **GET /tvshows/{id}/season/{id}/episode/{id}/rating**: Retrieve an episode’s rating [1]
+- [ ] **POST /tvshows/{id}/rating**: Rate a TV show [2]
+- [ ] **GET /tvshows/{id}/rating**: Retrieve a TV show’s rating [1]
+- [ ] **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
+- [ ] **GET /tvshows/{id}/season/{id}/rating**: Retrieve a season’s rating [1]
+- [ ] **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
+- [ ] **GET /tvshows/{id}/season/{id}/episode/{id}/rating**: Retrieve an episode’s rating [1]
 
 ## User Rating (Difficulty: 6)
-- [] **GET /me/movies/rating/avg**: Retrieve my average rating for all movies [3]
-- [] **GET /users/{id}/movies/ratings/avg**: See a user’s average rating for all movies [3]
+- [ ] **GET /me/movies/rating/avg**: Retrieve my average rating for all movies [3]
+- [ ] **GET /users/{id}/movies/ratings/avg**: See a user’s average rating for all movies [3]
 
 
 
