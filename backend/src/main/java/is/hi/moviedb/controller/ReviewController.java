@@ -33,6 +33,27 @@ public class ReviewController {
         }
     }
 
+
+    @PostMapping(value = "/createSeasonReview")
+    public ResponseEntity<Review> createSeasonReview(@RequestBody Review review){
+        Review newReview = reviewService.createSeasonReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        if (review != null) { // Check if successfully created
+            return ResponseEntity.ok(review); // Return the rating with 200 OK status
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not found
+        }
+    }
+
+    @PostMapping(value = "/createTvShowReview")
+    public ResponseEntity<Review> createTvShowReview(@RequestBody Review review){
+        Review newReview = reviewService.createTvShowReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        if (review != null) { // Check if successfully created
+            return ResponseEntity.ok(review); // Return the rating with 200 OK status
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not found
+        }
+    }
+
     /**
      * Deletes a Review object that has the input id
      * @param String id
