@@ -87,16 +87,16 @@ class GetMeRequest {
 }
 
 class EmailRequest {
-    private String email;
+  private String email;
 
-    // Getters and setters
-    public String getEmail() {
-        return email;
-    }
+  // Getters and setters
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 }
 
 /**
@@ -115,6 +115,7 @@ public class UserController {
   private final UserService userService;
   private final ReviewService reviewService;
 
+
   @Autowired
   public UserController(UserService userService, ReviewService reviewService) {
     this.userService = userService;
@@ -132,13 +133,19 @@ public class UserController {
 
   @PostMapping("/login")
   public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-    String result = userService.login(request.getEmail(), request.getPassword());
+    String result = userService.login(
+      request.getEmail(),
+      request.getPassword()
+    );
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   @PatchMapping("/password")
   public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
-    String result = userService.changePassword(request.getAccessToken(), request.getNewPassword());
+    String result = userService.changePassword(
+      request.getAccessToken(),
+      request.getNewPassword()
+    );
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
@@ -168,7 +175,9 @@ public class UserController {
    * @return a responseEntity<User> for the currently logged in user
    */
   @GetMapping("/me")
-  public ResponseEntity<User> getMe(@RequestHeader("Authorization") String accessToken) {
+  public ResponseEntity<User> getMe(
+    @RequestHeader("Authorization") String accessToken
+  ) {
     if (accessToken.startsWith("Bearer ")) {
       accessToken = accessToken.substring(7);
     }
@@ -210,11 +219,52 @@ public class UserController {
 
   @PostMapping("/idbyemail")
   public ResponseEntity<Long> getEmailById(@RequestBody EmailRequest emailRequest) {
-      Long result = userService.getUserId(emailRequest.getEmail());
-      if (result == null) {
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
-      return new ResponseEntity<>(result, HttpStatus.OK);
+    Long result = userService.getUserId(emailRequest.getEmail());
+    if (result == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+
+  @GetMapping("/me/movies/ratings/avg")
+  public ResponseEntity<Double> getAverageRatingOfMe(
+    @RequestHeader("Authorization") String accessToken
+  ){
+    User me = getMe(accessToken).getBody();
+
+    List<Review> reviews = reviewService.findByUserId(me.getId());
+    if (reviews == null){
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    double result = reviewService.calculateAverageRating(reviews); 
+    if (result < 0.0) { 
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } 
+
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  /**
+   * Retrieves the average rating of given User
+   *
+   * @return
+   */
+  @GetMapping("/users/{user_id}/movies/ratings/avg")
+  public ResponseEntity<Double> getAverageRatingOfUser(
+    @PathVariable String user_id
+  ){
+    List<Review> reviews = reviewService.findByUserId(Long.parseLong(user_id));
+    if (reviews == null){
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    double result = reviewService.calculateAverageRating(reviews); 
+    if (result < 0.0) { 
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } 
+
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 }
