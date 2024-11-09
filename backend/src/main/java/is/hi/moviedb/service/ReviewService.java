@@ -4,6 +4,7 @@ import is.hi.moviedb.model.Review;
 import java.util.List;
 public interface ReviewService {
 
+    //Hálparföll
     // All the methods that ReviewServiceImpl will implement
     Review createReview(long userId,long movieId,String movieReview,double rating);
     Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating);
@@ -18,5 +19,6 @@ public interface ReviewService {
     List<Review> findAll();
     boolean deleteAll();
     double findRatingById(String id);
-    double findAverageRatingByMovieId(long movieId);
+
+    double calculateAverageRating(List<Review> reviews);
 }

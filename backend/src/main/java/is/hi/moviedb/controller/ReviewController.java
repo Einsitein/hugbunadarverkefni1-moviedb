@@ -196,12 +196,19 @@ public class ReviewController {
      * @return Double averageRating
      */
     @GetMapping(value = "/findAverageRatingByMovieId/{movieId}")
-    public ResponseEntity<Double> findAverageRatingByMovieId(@PathVariable long movieId) {
-        Double averageRating = reviewService.findAverageRatingByMovieId(movieId); // Assuming this returns a Double
-        if (averageRating != null && averageRating >= 0.0) { // Check for null and if rating is non-negative
-            return ResponseEntity.ok(averageRating); // Return the rating with 200 OK status
-        } else {
-            return ResponseEntity.notFound().build(); // Return 404 if not found
+    public ResponseEntity<Double> findAverageRatingByMovieId(
+        @PathVariable long movieId
+    ) {
+        List<Review> reviews = reviewService.findByMovieId(movieId);
+        if(reviews == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        double result = reviewService.calculateAverageRating(reviews); 
+        if (result < 0.0) { 
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } 
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

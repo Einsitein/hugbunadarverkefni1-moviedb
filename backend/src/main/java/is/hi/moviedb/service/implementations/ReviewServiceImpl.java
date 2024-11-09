@@ -24,6 +24,7 @@ public class ReviewServiceImpl implements ReviewService{
     private final SeasonService seasonService;  // Add the SeasonService
 
     // Inject both ReviewRepository and SeasonService via constructor
+
     @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository, SeasonService seasonService, EpisodeService episodeService) {
         this.reviewRepository = reviewRepository;
@@ -40,7 +41,12 @@ public class ReviewServiceImpl implements ReviewService{
      * @return Review
      */
     @Override
-    public Review createReview(long userId,long movieId,String movieReview,double rating){
+    public Review createReview(
+        long userId,
+        long movieId,
+        String movieReview,
+        double rating
+    ){
         Review review = new Review(userId,movieId,movieReview,rating);
         reviewRepository.save(review);
         return review;
@@ -211,23 +217,12 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     /**
-     * Finds the average rating a movie has gotten from users
-     * @param movieId
+     * Calculates the average rating from a list of reviews
+     * @param List<Review> reviews
      * @return Double averageRating, negetive number if not found
      */
     @Override
-    public double findAverageRatingByMovieId(long movieId){
-        List<Review> reviews = findByMovieId(movieId);
-        double total = 0.0;
-        int count = 0;
-        for (Review review : reviews) {
-            total += review.getRating();
-        }
-        count = reviews.size();
-        if (0 < count) {
-            return total/count;
-        } else {
-            return -1.0;
-        }
+    public double calculateAverageRating(List<Review> reviews){
+        return reviews.stream().mapToDouble(review -> review.getRating()).average().orElse(-1.0); 
     }
 }
