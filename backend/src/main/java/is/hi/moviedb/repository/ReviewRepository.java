@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review,Long>{
     //Custom query
-    Review findByUserIdAndMovieId(long userId,long movieId);
+    Review findByUserIdAndMediaId(long userId,long mediaId);
     Review findById(String id);
-    boolean existsByUserIdAndMovieId(long userId,long movieId);
+    boolean existsByUserIdAndMediaId(long userId,long mediaId);
     boolean existsById(String id);
     void deleteById(String id);
     List<Review> findAll();
     List<Review> findByUserId(Long userId);
-    List<Review> findByMovieId(Long movieId);
+    List<Review> findByMediaId(Long mediaId);
     double findRatingById(String id);
     void deleteAll();
-    double findAverageRatingByMovieId(long movieId);
+    double findAverageRatingByMediaId(long mediaId);
 }

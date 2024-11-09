@@ -5,18 +5,18 @@ import java.util.List;
 public interface ReviewService {
 
     // All the methods that ReviewServiceImpl will implement
-    Review createReview(long userId,long movieId,String movieReview,double rating);
+    Review createReview(long userId,long mediaId,String mediaReview,double rating);
     Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating);
     Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating);
     boolean deleteReview(String id);
-    Review changeReview(long userId,long movieId,String movieReview,double rating);
+    Review changeReview(long userId,long mediaId,String mediaReview,double rating);
 
-    Review findByUserIdAndMovieId(long userId,long movieId);
+    Review findByUserIdAndMediaId(long userId,long mediaId);
     Review findById(String id);
     List<Review> findByUserId(long userId);
-    List<Review> findByMovieId(long movieId);
+    List<Review> findByMediaId(long mediaId);
     List<Review> findAll();
     boolean deleteAll();
     double findRatingById(String id);
-    double findAverageRatingByMovieId(long movieId);
+    double findAverageRatingByMediaId(long mediaId);
 }

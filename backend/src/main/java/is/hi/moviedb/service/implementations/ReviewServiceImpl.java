@@ -23,7 +23,7 @@ public class ReviewServiceImpl implements ReviewService{
     private final EpisodeService episodeService;
     private final SeasonService seasonService;  // Add the SeasonService
 
-    // Inject both ReviewRepository and SeasonService via constructor
+    // Inject ReviewRepository, EpisodeService and SeasonService via constructor
     @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository, SeasonService seasonService, EpisodeService episodeService) {
         this.reviewRepository = reviewRepository;
@@ -40,18 +40,26 @@ public class ReviewServiceImpl implements ReviewService{
      * @return Review
      */
     @Override
-    public Review createReview(long userId,long movieId,String movieReview,double rating){
-        Review review = new Review(userId,movieId,movieReview,rating);
+    public Review createReview(long userId,long mediaId,String mediaReview,double rating){
+        Review review = new Review(userId,mediaId,mediaReview,rating);
         reviewRepository.save(review);
         return review;
     }
 
+    /**
+     * Creates a new Review for a season, then rates all unrated episodes in that season
+     * @param userId
+     * @param movieId
+     * @param movieReview
+     * @param rating
+     * @return Review
+     */
     @Override
     public Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating){
         List<Episode> episodeList = episodeService.getEpisodesBySeasonId((int) seasonId);
         for (int i = 0; i < episodeList.size();i++) {
             long episodeId = episodeList.get(i).getId();
-            if (findByUserIdAndMovieId(userId,episodeId) == null) {
+            if (findByUserIdAndMediaId(userId,episodeId) == null) {
                 createReview(userId,episodeId,"",rating);
             }
         }
@@ -60,12 +68,20 @@ public class ReviewServiceImpl implements ReviewService{
         return review;
     }
 
+    /**
+     * Creates a new Review, then rates all unrated seasons of that tv show
+     * @param userId
+     * @param movieId
+     * @param movieReview
+     * @param rating
+     * @return Review
+     */
     @Override
     public Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating){
         List<Season> seasonList = seasonService.getSeasonsByTvShowId((int) tvShowId);
         for (int i = 0; i < seasonList.size(); i++) {
             long seasonId = seasonList.get(i).getId();
-            if (findByUserIdAndMovieId(userId,seasonId) == null) {
+            if (findByUserIdAndMediaId(userId,seasonId) == null) {
                 createSeasonReview(userId,seasonId,"",rating);
             }
         }
@@ -99,10 +115,10 @@ public class ReviewServiceImpl implements ReviewService{
      */
 
     @Override
-    public Review changeReview(long userId,long movieId,String movieReview,double rating){
-        Review review = reviewRepository.findById(Long.toString(userId) + "-" + Long.toString(movieId));
+    public Review changeReview(long userId,long mediaId,String mediaReview,double rating){
+        Review review = reviewRepository.findById(Long.toString(userId) + "-" + Long.toString(mediaId));
         review.setRating(rating);
-        review.setMovieReview(movieReview);
+        review.setMovieReview(mediaReview);
         reviewRepository.save(review);
         if (review != null){
             return review;
@@ -117,8 +133,8 @@ public class ReviewServiceImpl implements ReviewService{
      * @return Review
      */
     @Override
-    public Review findByUserIdAndMovieId(long userId,long movieId){
-        Review review = reviewRepository.findByUserIdAndMovieId(userId,movieId);
+    public Review findByUserIdAndMediaId(long userId,long mediaId){
+        Review review = reviewRepository.findByUserIdAndMediaId(userId,mediaId);
         if (review != null){
             return review;
         }
@@ -159,8 +175,8 @@ public class ReviewServiceImpl implements ReviewService{
      * @return List of Reviews
      */
     @Override
-    public List<Review> findByMovieId(long movieId){
-        List<Review> reviews = reviewRepository.findByMovieId(movieId);
+    public List<Review> findByMediaId(long mediaId){
+        List<Review> reviews = reviewRepository.findByMediaId(mediaId);
         if (reviews != null){
             return reviews;
         }
@@ -216,8 +232,8 @@ public class ReviewServiceImpl implements ReviewService{
      * @return Double averageRating, negetive number if not found
      */
     @Override
-    public double findAverageRatingByMovieId(long movieId){
-        List<Review> reviews = findByMovieId(movieId);
+    public double findAverageRatingByMediaId(long movieId){
+        List<Review> reviews = findByMediaId(movieId);
         double total = 0.0;
         int count = 0;
         for (Review review : reviews) {
