@@ -7,6 +7,8 @@ public interface ReviewService {
     //Hálparföll
     // All the methods that ReviewServiceImpl will implement
     Review createReview(long userId,long movieId,String movieReview,double rating);
+    Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating);
+    Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating);
     boolean deleteReview(String id);
     Review changeReview(long userId,long movieId,String movieReview,double rating);
 

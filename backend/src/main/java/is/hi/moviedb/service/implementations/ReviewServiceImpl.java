@@ -8,15 +8,28 @@ import is.hi.moviedb.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
+import is.hi.moviedb.model.Episode;
+import is.hi.moviedb.model.Season;
+import is.hi.moviedb.service.EpisodeService;
+import is.hi.moviedb.service.SeasonService;
+import is.hi.moviedb.service.implementations.EpisodeServiceImpl;
+import is.hi.moviedb.service.implementations.SeasonServiceImpl;
+import is.hi.moviedb.repository.EpisodeRepository;
+import is.hi.moviedb.repository.SeasonRepository;
+import is.hi.moviedb.controller.TvShowController;
 @Service
 public class ReviewServiceImpl implements ReviewService{
-    private ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
+    private final EpisodeService episodeService;
+    private final SeasonService seasonService;  // Add the SeasonService
 
+    // Inject both ReviewRepository and SeasonService via constructor
 
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, SeasonService seasonService, EpisodeService episodeService) {
         this.reviewRepository = reviewRepository;
+        this.episodeService = episodeService;
+        this.seasonService = seasonService;  // Initialize the seasonService
     }
 
     /**
@@ -35,6 +48,34 @@ public class ReviewServiceImpl implements ReviewService{
         double rating
     ){
         Review review = new Review(userId,movieId,movieReview,rating);
+        reviewRepository.save(review);
+        return review;
+    }
+
+    @Override
+    public Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating){
+        List<Episode> episodeList = episodeService.getEpisodesBySeasonId((int) seasonId);
+        for (int i = 0; i < episodeList.size();i++) {
+            long episodeId = episodeList.get(i).getId();
+            if (findByUserIdAndMovieId(userId,episodeId) == null) {
+                createReview(userId,episodeId,"",rating);
+            }
+        }
+        Review review = new Review(userId,seasonId,seasonReview,rating);
+        reviewRepository.save(review);
+        return review;
+    }
+
+    @Override
+    public Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating){
+        List<Season> seasonList = seasonService.getSeasonsByTvShowId((int) tvShowId);
+        for (int i = 0; i < seasonList.size(); i++) {
+            long seasonId = seasonList.get(i).getId();
+            if (findByUserIdAndMovieId(userId,seasonId) == null) {
+                createSeasonReview(userId,seasonId,"",rating);
+            }
+        }
+        Review review = new Review(userId,tvShowId,tvShowReview,rating);
         reviewRepository.save(review);
         return review;
     }
