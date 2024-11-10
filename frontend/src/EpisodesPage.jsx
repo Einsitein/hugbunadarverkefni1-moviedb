@@ -127,7 +127,7 @@ export default function EpisodesPage() {
         <img src={season.images || tvshow.images} alt={season.name} className="tvshow-image" />
         <div className="tvshow-details">
           <h1 className="tvshow-title">{tvshow.name} - Season {season.seasonNumber}</h1>
-          <p>Air Date: {season.tvShow?.description}</p>
+          <p>Description: {season.tvShow?.description}</p>
 
           {myRating !== null ? (
             <>
