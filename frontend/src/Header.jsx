@@ -24,6 +24,7 @@ export default function Header() {
       <div className="contentButtons">
         {email ? (
           <>
+            <a href="/tvshows">TV Shows</a>
             <a href="/movies">Movies</a>
             <a href="/users">Users</a>
             <a href="/me">My Account</a>

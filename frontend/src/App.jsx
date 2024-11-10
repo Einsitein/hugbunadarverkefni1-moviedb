@@ -9,6 +9,10 @@ import MoviesPage from "./MoviesPage.jsx";
 import MoviePage from "./MoviePage.jsx";
 import UsersPage from "./UsersPage.jsx";
 import UserPage from "./UserPage.jsx";
+import TVShowsPage from "./TVShowsPage.jsx";
+import SeasonsPage from "./SeasonsPage.jsx";
+import EpisodesPage from "./EpisodesPage.jsx";
+import EpisodePage from "./EpisodePage.jsx";
 
 export default function App() {
   return (
@@ -24,6 +28,10 @@ export default function App() {
           <Route exact path="movies/:movieid" element={<MoviePage />} />
           <Route exact path="users" element={<UsersPage />} />
           <Route exact path="users/:userid" element={<UserPage />} />
+          <Route exact path="tvshows" element={<TVShowsPage />} />
+          <Route exact path="tvshows/:tvshowid" element={<SeasonsPage />} />
+          <Route exact path="tvshows/:tvshowid/seasons/:seasonid" element={<EpisodesPage />} />
+          <Route exact path="tvshows/:tvshowid/seasons/:seasonid/episodes/:episodeid" element={<EpisodePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

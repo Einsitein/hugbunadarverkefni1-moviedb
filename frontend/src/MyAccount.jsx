@@ -12,6 +12,7 @@ export default function MyAccount() {
   const baseURL = "http://localhost:8080/";
   const [passwordSameMessage, setPasswordSameMessage] = useState("");
   const [userId, setUserId] = useState(null);
+  const [averageRating, setAverageRating] = useState(null);
 
   const getUserId = async () => {
     const user_id_response = await axios.post(baseURL + "user/idbyemail", {
@@ -22,34 +23,55 @@ export default function MyAccount() {
     return user_id_tmp;
   };
 
-   const fetchMyMovieRatings = async () => {
-     let user_id = userId;
-     if (!userId) {
-       user_id = await getUserId();
-     }
-     try {
-       const response = await axios.get(
-         baseURL + `user/users/${user_id}/movies/ratings`
-       );
-       const movieRatings = await Promise.all(
-         response.data.map(async (rating_obj) => {
-           console.log(rating_obj);
-           const movieResponse = await axios.get(
-             baseURL + `movies/${rating_obj.movieId}`
-           );
-           return {
-             myRating: rating_obj.rating,
-             ...movieResponse.data,
-           };
-         })
-       );
-       console.log(movieRatings);
-       setMyMovieRatings(movieRatings);
-     } catch (error) {
-       console.error("There was an unknown error!", error);
-       console.log("hereeeeeeeeeeeeeeeeeee");
-     }
-   };
+  const fetchMyMovieRatings = async () => {
+    let user_id = userId;
+    if (!userId) {
+      user_id = await getUserId();
+    }
+    try {
+      const response = await axios.get(
+        baseURL + `user/users/${user_id}/movies/ratings`
+      );
+      const movieRatings = await Promise.all(
+        response.data.map(async (rating_obj) => {
+          console.log(rating_obj);
+          try {
+            const movieResponse = await axios.get(
+              baseURL + `movies/${rating_obj.movieId}`
+            );
+            return {
+              myRating: rating_obj.rating,
+              ...movieResponse.data,
+            };
+          } catch (error) {
+            console.error("There was an unknown error!", error);
+            return null;
+          }
+        })
+      );
+      const filteredMovieRatings = movieRatings.filter(rating => rating !== null);
+      console.log(filteredMovieRatings);
+      setMyMovieRatings(filteredMovieRatings);
+    } catch (error) {
+      console.error("There was an unknown error!", error);
+      console.log("hereeeeeeeeeeeeeeeeeee");
+    }
+  };
+
+  const fetchAverageRating = async () => {
+    let user_id = userId;
+    if (!userId) {
+      user_id = await getUserId();
+    }
+    try {
+      const response = await axios.get(
+        baseURL + `user/users/${user_id}/movies/ratings/avg`
+      );
+      setAverageRating(response.data);
+    } catch (error) {
+      console.error("Error fetching average rating:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchMyEmail = async () => {
@@ -67,6 +89,7 @@ export default function MyAccount() {
    
     fetchMyEmail();
     fetchMyMovieRatings();
+    fetchAverageRating();
   }, [token]);
 
   useEffect(() => {
@@ -149,6 +172,15 @@ export default function MyAccount() {
       </div>
       <div className="movie-ratings">
         <h2>My Movie Ratings</h2>
+        {averageRating !== null && typeof averageRating === 'number' ? (
+          <div className="average-rating">
+            Average Rating: {averageRating.toFixed(1)}
+          </div>
+        ) : (
+          <div className="average-rating">
+            No ratings yet
+          </div>
+        )}
         {myMovieRatings.map((movie, index) => (
           <div key={index} className="movie-rating">
             <img src={movie.images} alt={movie.title} />
