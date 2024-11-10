@@ -23,7 +23,7 @@
 - [X] **POST /review/createSeasonReview** - Creates a Season Review
     - **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
 
-- [X] **/review/createReview?** - Creates a Movie and Episode Review
+- [X] **POST /review/createReview?** - Creates a Movie and Episode Review
     - **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
 
 ## User Rating (Difficulty: 6)
