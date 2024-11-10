@@ -12,7 +12,7 @@
 - [X] **GET /tvshows/{id}/season/{id}/episode/{id}**: Retrieve an episode’s info by ID [1]
 
 ## Media Rating (Difficulty: 9)
-- [X] **GET /review/findByMovieId/{movieId} - Retrieves Movie/TvShow/season/episode rating
+- [X] **GET /review/findByMovieId/{movieId}** - Retrieves Movie/TvShow/season/episode rating
     - **GET /tvshows/{id}/rating**: Retrieve a TV show’s rating [1]
     - **GET /tvshows/{id}/season/{id}/rating**: Retrieve a season’s rating [1]
     - **GET /tvshows/{id}/season/{id}/episode/{id}/rating**: Retrieve an episode’s rating [1]
