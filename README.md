@@ -12,20 +12,19 @@
 - [X] **GET /tvshows/{id}/season/{id}/episode/{id}**: Retrieve an episode’s info by ID [1]
 
 ## Media Rating (Difficulty: 9)
-- [ ] **GET /tvshows/{id}/rating**: Retrieve a TV show’s rating [1]
-- [ ] **GET /tvshows/{id}/season/{id}/rating**: Retrieve a season’s rating [1]
-- [ ] **GET /tvshows/{id}/season/{id}/episode/{id}/rating**: Retrieve an episode’s rating [1]
--- **???**
+- [X] **GET /review/findByMovieId/{movieId} - Retrieves Movie/TvShow/season/episode rating
+    - **GET /tvshows/{id}/rating**: Retrieve a TV show’s rating [1]
+    - **GET /tvshows/{id}/season/{id}/rating**: Retrieve a season’s rating [1]
+    - **GET /tvshows/{id}/season/{id}/episode/{id}/rating**: Retrieve an episode’s rating [1]
 
+- [X] **POST /review/createTvShowReview** - Creates a TvShow Review
+    - **POST /tvshows/{id}/rating**: Rate a TV show [2]
 
-- [ ] **POST /tvshows/{id}/rating**: Rate a TV show [2]
--- **POST /review/createTvShowReview**
+- [X] **POST /review/createSeasonReview** - Creates a Season Review
+    - **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
 
-- [ ] **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
--- **POST /review/createSeasonReview**
-
-- [ ] **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
--- **/review/createReview???** 
+- [X] **/review/createReview?** - Creates a Movie and Episode Review
+    - **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
 
 ## User Rating (Difficulty: 6)
 - [X] **GET /me/movies/rating/avg**: Retrieve my average rating for all movies [3]
