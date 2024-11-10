@@ -12,16 +12,24 @@
 - [X] **GET /tvshows/{id}/season/{id}/episode/{id}**: Retrieve an episode’s info by ID [1]
 
 ## Media Rating (Difficulty: 9)
-- [ ] **POST /tvshows/{id}/rating**: Rate a TV show [2]
 - [ ] **GET /tvshows/{id}/rating**: Retrieve a TV show’s rating [1]
-- [ ] **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
 - [ ] **GET /tvshows/{id}/season/{id}/rating**: Retrieve a season’s rating [1]
-- [ ] **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
 - [ ] **GET /tvshows/{id}/season/{id}/episode/{id}/rating**: Retrieve an episode’s rating [1]
+-- **???**
+
+
+- [ ] **POST /tvshows/{id}/rating**: Rate a TV show [2]
+-- **POST /review/createTvShowReview**
+
+- [ ] **POST /tvshows/{id}/season/{id}/rating**: Rate a season [2]
+-- **POST /review/createSeasonReview**
+
+- [ ] **POST /tvshows/{id}/season/{id}/episode/{id}/rating**: Rate an episode [2]
+-- **/review/createReview???** 
 
 ## User Rating (Difficulty: 6)
-- [ ] **GET /me/movies/rating/avg**: Retrieve my average rating for all movies [3]
-- [ ] **GET /users/{id}/movies/ratings/avg**: See a user’s average rating for all movies [3]
+- [X] **GET /me/movies/rating/avg**: Retrieve my average rating for all movies [3]
+- [X] **GET /users/{id}/movies/ratings/avg**: See a user’s average rating for all movies [3]
 
 
 
