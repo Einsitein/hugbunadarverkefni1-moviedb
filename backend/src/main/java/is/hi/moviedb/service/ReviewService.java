@@ -10,7 +10,11 @@ public interface ReviewService {
     Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating);
     Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating);
     boolean deleteReview(String id);
+    boolean deleteSeasonReview(long userId,long seasonId);
+    boolean deleteTvShowReview(long userId,long tvShowId);
     Review changeReview(long userId,long movieId,String movieReview,double rating);
+    Review changeSeasonReview(long userId,long seasonId,String seasonReview,double rating);
+    Review changeTvShowReview(long userId,long tvShowId,String tvShowReview,double rating);
 
     Review findByUserIdAndMovieId(long userId,long movieId);
     Review findById(String id);

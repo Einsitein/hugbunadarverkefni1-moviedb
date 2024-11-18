@@ -54,6 +54,9 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating){
+        Review review = new Review(userId, seasonId, seasonReview, rating);
+        reviewRepository.save(review);
+        
         List<Episode> episodeList = episodeService.getEpisodesBySeasonId((int) seasonId);
         for (int i = 0; i < episodeList.size();i++) {
             long episodeId = episodeList.get(i).getId();
@@ -61,13 +64,14 @@ public class ReviewServiceImpl implements ReviewService{
                 createReview(userId,episodeId,"",rating);
             }
         }
-        Review review = new Review(userId,seasonId,seasonReview,rating);
-        reviewRepository.save(review);
         return review;
     }
 
     @Override
     public Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating){
+        Review review = new Review(userId, tvShowId, tvShowReview, rating);
+        reviewRepository.save(review);
+
         List<Season> seasonList = seasonService.getSeasonsByTvShowId((int) tvShowId);
         for (int i = 0; i < seasonList.size(); i++) {
             long seasonId = seasonList.get(i).getId();
@@ -75,8 +79,6 @@ public class ReviewServiceImpl implements ReviewService{
                 createSeasonReview(userId,seasonId,"",rating);
             }
         }
-        Review review = new Review(userId,tvShowId,tvShowReview,rating);
-        reviewRepository.save(review);
         return review;
     }
 
@@ -86,13 +88,35 @@ public class ReviewServiceImpl implements ReviewService{
      * @return true if successfull, false if not
      */
 
-    @Transactional
+    @Override
     public boolean deleteReview(String id){
         if (reviewRepository.existsById(id)) {
             reviewRepository.deleteById(id);
             return true; // Successfully deleted
         }
         return false; // Review not found
+    }
+
+    @Override
+    public boolean deleteSeasonReview(long userId, long seasonId) {
+        boolean success = deleteReview(Long.toString(userId) + "-" + Long.toString(seasonId));
+        List<Episode> episodeList = episodeService.getEpisodesBySeasonId((int) seasonId);
+        for (int i = 0; i < episodeList.size(); i++) {
+            long episodeId = episodeList.get(i).getId();
+            deleteReview(Long.toString(userId) + "-" + Long.toString(episodeId));
+        }
+        return success;
+    }
+
+    @Override
+    public boolean deleteTvShowReview(long userId, long tvShowId) {
+        boolean success = deleteReview(Long.toString(userId) + "-" + Long.toString(tvShowId));
+        List<Season> seasonList = seasonService.getSeasonsByTvShowId((int) tvShowId);
+        for (int i = 0; i < seasonList.size(); i++) {
+            long seasonId = seasonList.get(i).getId();
+            deleteSeasonReview(userId, seasonId);
+        }
+        return success;
     }
 
     /**
@@ -115,6 +139,33 @@ public class ReviewServiceImpl implements ReviewService{
         }
         return null;
     };
+
+    @Override
+    public Review changeSeasonReview(long userId, long seasonId, String seasonReview, double rating) {
+        Review review = changeReview(userId, seasonId, seasonReview, rating);
+        
+
+        List<Episode> episodeList = episodeService.getEpisodesBySeasonId((int) seasonId);
+        for (int i = 0; i < episodeList.size(); i++) {
+            long episodeId = episodeList.get(i).getId();
+            changeReview(userId, episodeId, "", rating);
+        }
+        return review;
+    }
+
+    @Override
+    public Review changeTvShowReview(long userId, long tvShowId, String tvShowReview, double rating) {
+        Review review = changeReview(userId, tvShowId, tvShowReview, rating);
+
+        List<Season> seasonList = seasonService.getSeasonsByTvShowId((int) tvShowId);
+        for (int i = 0; i < seasonList.size(); i++) {
+            long seasonId = seasonList.get(i).getId();
+            changeSeasonReview(userId, seasonId, "", rating);
+        }
+        return review;
+    }
+
+
 
     /**
      * Finds a review with userId and movieId

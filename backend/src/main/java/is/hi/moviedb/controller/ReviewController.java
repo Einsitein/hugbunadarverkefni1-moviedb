@@ -70,6 +70,39 @@ public class ReviewController {
     }
 
     /**
+     * Deletes a Review object that has userId and movieId
+     * @param userId
+     * @param movieId
+     * @return 202 if success, 404 if not found
+     */
+
+    @DeleteMapping(value = "/deleteSeasonReview/{userId}/{seasonId}")
+    public ResponseEntity<Void> deleteSeasonReview(@PathVariable long userId, @PathVariable long seasonId){
+        boolean isDeleted = reviewService.deleteSeasonReview(userId, seasonId); // Assuming this returns a boolean
+        if (isDeleted) { // Check if successfully deleted
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+    }
+
+    /**
+     * Deletes a Review object that has userId and movieId
+     * @param userId
+     * @param movieId
+     * @return 202 if success, 404 if not found
+     */
+    @DeleteMapping(value = "/deleteTvShowReview/{userId}/{tvShowId}")
+    public ResponseEntity<Void> deleteTvShowReview(@PathVariable long userId, @PathVariable long tvShowId){
+        boolean isDeleted = reviewService.deleteTvShowReview(userId, tvShowId); // Assuming this returns a boolean
+        if (isDeleted) { // Check if successfully deleted
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+    }
+
+    /**
      * Changes a review
      * @param Review object
      * @return Review object that was changed, 404 if not found
@@ -77,6 +110,38 @@ public class ReviewController {
     @PatchMapping(value = "/changeReview")
     public ResponseEntity<Review> changeReview(@RequestBody Review review){
         Review updatedReview = reviewService.changeReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        if (updatedReview != null) { // Check if successfully changed
+            return ResponseEntity.ok(updatedReview); // Found and changed
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not found
+        }
+    }
+
+    /**
+     * Changes a review for a Season
+     * @param review object
+     * @return Review object that was changed, 404 if not found
+     */
+
+    @PatchMapping(value = "/changeSeasonReview")
+    public ResponseEntity<Review> changeSeasonReview(@RequestBody Review review){
+        Review updatedReview = reviewService.changeSeasonReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        if (updatedReview != null) { // Check if successfully changed
+            return ResponseEntity.ok(updatedReview); // Found and changed
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not found
+        }
+    }
+
+    /**
+     * Changes a review for a TvShow
+        * @param review object
+        * @return Review object that was changed, 404 if not found
+     */
+
+    @PatchMapping(value = "/changeTvShowReview")
+    public ResponseEntity<Review> changeTvShowReview(@RequestBody Review review){
+        Review updatedReview = reviewService.changeTvShowReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
         if (updatedReview != null) { // Check if successfully changed
             return ResponseEntity.ok(updatedReview); // Found and changed
         } else {
