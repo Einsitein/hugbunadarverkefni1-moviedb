@@ -35,7 +35,8 @@ export default function EpisodePage() {
         setSeason(seasonResponse.data);
 
         const episodeResponse = await axios.get(
-          baseURL + `tvshows/${tvshowid}/season/${seasonid}/episode/${episodeid}`
+          baseURL +
+            `tvshows/${tvshowid}/season/${seasonid}/episode/${episodeid}`
         );
         setEpisode(episodeResponse.data);
 
@@ -43,7 +44,7 @@ export default function EpisodePage() {
           const user_id = await getUserId();
           try {
             const ratingResponse = await axios.get(
-              baseURL + `review/findByUserIdAndMovieId/${user_id}/${episodeid}`
+              baseURL + `review/findByUserIdAndMediaId/${user_id}/${episodeid}`
             );
             setMyRating(ratingResponse.data.rating);
           } catch (error) {
@@ -87,7 +88,7 @@ export default function EpisodePage() {
       await axios.patch(baseURL + `review/changeReview`, {
         userId: user_id,
         movieId: episodeid,
-        rating: newRating
+        rating: newRating,
       });
       setMyRating(newRating);
     } catch (error) {
@@ -109,7 +110,7 @@ export default function EpisodePage() {
       await axios.post(baseURL + "review/createReview", {
         userId: `${user_id}`,
         movieId: `${episodeid}`,
-        rating: `${newRating}`
+        rating: `${newRating}`,
       });
       setMyRating(newRating);
     } catch (error) {
@@ -124,14 +125,15 @@ export default function EpisodePage() {
   return (
     <div className="episode-page">
       <div className="episode-page-content">
-        <img 
-          src={episode.images || season.images || tvshow.images} 
-          alt={episode.title} 
-          className="episode-image" 
+        <img
+          src={episode.images || season.images || tvshow.images}
+          alt={episode.title}
+          className="episode-image"
         />
         <div className="episode-details">
           <h1 className="episode-title">
-            {tvshow.name} - S{season.seasonNumber}E{episode.episodeNumber}: {episode.title}
+            {tvshow.name} - S{season.seasonNumber}E{episode.episodeNumber}:{" "}
+            {episode.title}
           </h1>
           <p>Episode Name: {episode.episodeName}</p>
 

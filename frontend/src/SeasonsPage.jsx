@@ -45,7 +45,7 @@ export default function SeasonsPage() {
       }
       try {
         const response = await axios.get(
-          baseURL + `review/findByUserIdAndMovieId/${user_id}/${tvshowid}`
+          baseURL + `review/findByUserIdAndMediaId/${user_id}/${tvshowid}`
         );
         setMyRating(response.data.rating);
       } catch (error) {
@@ -108,7 +108,7 @@ export default function SeasonsPage() {
       await axios.post(baseURL + "review/createTvShowReview", {
         userId: `${user_id}`,
         movieId: `${tvshowid}`,
-        rating: `${newRating}`
+        rating: `${newRating}`,
       });
       setMyRating(newRating);
     } catch (error) {
@@ -168,7 +168,7 @@ export default function SeasonsPage() {
             key={season.id}
             className="season-item"
             onClick={() => handleSeasonClick(season.id)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             <img
               src={season.images || tvshow.images}

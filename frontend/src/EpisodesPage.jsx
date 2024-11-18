@@ -46,7 +46,7 @@ export default function EpisodesPage() {
         if (!userid) {
           const user_id = await getUserId();
           const ratingResponse = await axios.get(
-            baseURL + `review/findByUserIdAndMovieId/${user_id}/${seasonid}`
+            baseURL + `review/findByUserIdAndMediaId/${user_id}/${seasonid}`
           );
           setMyRating(ratingResponse.data.rating);
         }
@@ -109,7 +109,7 @@ export default function EpisodesPage() {
       await axios.post(baseURL + "review/createSeasonReview", {
         userId: `${user_id}`,
         movieId: `${seasonid}`,
-        rating: `${newRating}`
+        rating: `${newRating}`,
       });
       setMyRating(newRating);
     } catch (error) {
@@ -124,9 +124,15 @@ export default function EpisodesPage() {
   return (
     <div className="tvshow-page-container">
       <div className="tvshow-info">
-        <img src={season.images || tvshow.images} alt={season.name} className="tvshow-image" />
+        <img
+          src={season.images || tvshow.images}
+          alt={season.name}
+          className="tvshow-image"
+        />
         <div className="tvshow-details">
-          <h1 className="tvshow-title">{tvshow.name} - Season {season.seasonNumber}</h1>
+          <h1 className="tvshow-title">
+            {tvshow.name} - Season {season.seasonNumber}
+          </h1>
           <p>Description: {season.tvShow?.description}</p>
 
           {myRating !== null ? (
@@ -159,9 +165,9 @@ export default function EpisodesPage() {
       <h2>Episodes</h2>
       <div className="displaying-seasons">
         {episodes.map((episode) => (
-          <Link 
+          <Link
             to={`/tvshows/${tvshowid}/seasons/${seasonid}/episodes/${episode.id}`}
-            key={episode.id} 
+            key={episode.id}
             className="season-item"
           >
             <img

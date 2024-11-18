@@ -28,7 +28,7 @@ export default function MoviePage() {
   const fetchAvgRating = async () => {
     try {
       const response = await axios.get(
-        baseURL + `review/findAverageRatingByMovieId/${movieid}`
+        baseURL + `review/findAverageRatingByMediaId/${movieid}`
       );
       console.log(response.data);
       setAvgRating(response.data);
@@ -55,7 +55,7 @@ export default function MoviePage() {
       }
       try {
         const response = await axios.get(
-          baseURL + `review/findByUserIdAndMovieId/${user_id}/${movieid}`
+          baseURL + `review/findByUserIdAndMediaId/${user_id}/${movieid}`
         );
         setMyRating(response.data.rating);
       } catch (error) {
