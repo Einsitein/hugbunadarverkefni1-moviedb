@@ -19,13 +19,13 @@ public class ReviewController {
     }
 
     /**
-     * Creates new Review object
+     * Creates new Review object for a media(episode or movie)
      * @param Input is Json format Review object (long userId, long movieId, String review, double rating)
      * @return Newly created Review object
      */
     @PostMapping(value = "/createReview")
     public ResponseEntity<Review> createReview(@RequestBody Review review){
-        Review newReview = reviewService.createReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        Review newReview = reviewService.createReview(review.getUserId(), review.getMediaId(), review.getMediaReview(), review.getRating()); // Assuming this returns a Review
         if (review != null) { // Check if successfully created
             return ResponseEntity.ok(review); // Return the rating with 200 OK status
         } else {
@@ -33,10 +33,14 @@ public class ReviewController {
         }
     }
 
-
+    /**
+     * Creates a review for a particular season aswell as the same rating for all of it's unrated episodes
+     * @param review
+     * @return
+     */
     @PostMapping(value = "/createSeasonReview")
     public ResponseEntity<Review> createSeasonReview(@RequestBody Review review){
-        Review newReview = reviewService.createSeasonReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        Review newReview = reviewService.createSeasonReview(review.getUserId(), review.getMediaId(), review.getMediaReview(), review.getRating()); // Assuming this returns a Review
         if (review != null) { // Check if successfully created
             return ResponseEntity.ok(review); // Return the rating with 200 OK status
         } else {
@@ -44,9 +48,14 @@ public class ReviewController {
         }
     }
 
+    /**
+     * Creates a review for a particular tvshow aswell as the same rating for all of it's unrated seasons
+     * @param review
+     * @return
+     */
     @PostMapping(value = "/createTvShowReview")
     public ResponseEntity<Review> createTvShowReview(@RequestBody Review review){
-        Review newReview = reviewService.createTvShowReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        Review newReview = reviewService.createTvShowReview(review.getUserId(), review.getMediaId(), review.getMediaReview(), review.getRating()); // Assuming this returns a Review
         if (review != null) { // Check if successfully created
             return ResponseEntity.ok(review); // Return the rating with 200 OK status
         } else {
@@ -76,7 +85,7 @@ public class ReviewController {
      */
     @PatchMapping(value = "/changeReview")
     public ResponseEntity<Review> changeReview(@RequestBody Review review){
-        Review updatedReview = reviewService.changeReview(review.getUserId(), review.getMovieId(), review.getMovieReview(), review.getRating()); // Assuming this returns a Review
+        Review updatedReview = reviewService.changeReview(review.getUserId(), review.getMediaId(), review.getMediaReview(), review.getRating()); // Assuming this returns a Review
         if (updatedReview != null) { // Check if successfully changed
             return ResponseEntity.ok(updatedReview); // Found and changed
         } else {
@@ -90,7 +99,7 @@ public class ReviewController {
      * @return Review object
      */
     @GetMapping(value = "/findById/{id}")
-    public ResponseEntity<Review> findByUserIdAndMovieId(@PathVariable String id){
+    public ResponseEntity<Review> findByUserIdAndMediaId(@PathVariable String id){
         Review review = reviewService.findById(id); // Assuming this returns a Review
         if (review != null) { // Check if found
             return ResponseEntity.ok(review); // Return the rating with 200 OK status
@@ -100,14 +109,14 @@ public class ReviewController {
     }
 
     /**
-     * Finds and returns object that has userId and movieId
+     * Finds and returns object that has userId and mediaId
      * @param userId
-     * @param movieId
+     * @param mediaId
      * @return Review object if found, 404 if not
      */
-    @GetMapping(value = "/findByUserIdAndMovieId/{userId}/{movieId}")
-    public ResponseEntity<Review> findByUserIdAndMovieId (@PathVariable long userId, @PathVariable long movieId){
-        Review review = reviewService.findByUserIdAndMovieId(userId,movieId); // Assuming this returns a Review
+    @GetMapping(value = "/findByUserIdAndMediaId/{userId}/{mediaId}")
+    public ResponseEntity<Review> findByUserIdAndMediaId (@PathVariable long userId, @PathVariable long mediaId){
+        Review review = reviewService.findByUserIdAndMediaId(userId,mediaId); // Assuming this returns a Review
         if (review != null) { // Check if found
             return ResponseEntity.ok(review); // Return the rating with 200 OK status
         } else {
@@ -131,13 +140,13 @@ public class ReviewController {
     }
 
     /**
-     * Finds and returns all Reviews for a particular movie
-     * @param movieId
+     * Finds and returns all Reviews for a particular media
+     * @param mediaId
      * @return List of Review
      */
-    @GetMapping(value = "/findByMovieId/{movieId}")
-    public ResponseEntity<List<Review>> findByMovieId(@PathVariable long movieId){
-        List<Review> reviews = reviewService.findByMovieId(movieId); // Assuming this returns List<Review>
+    @GetMapping(value = "/findByMediaId/{mediaId}")
+    public ResponseEntity<List<Review>> findByMediaId(@PathVariable long mediaId){
+        List<Review> reviews = reviewService.findByMediaId(mediaId); // Assuming this returns List<Review>
         if (!reviews.isEmpty()) { // Check if found
             return ResponseEntity.ok(reviews); // Return the rating with 200 OK status
         } else {
@@ -191,15 +200,15 @@ public class ReviewController {
     }
 
     /**
-     * Finds the average rating that user have given to a particular movie
-     * @param movieId
+     * Finds the average rating that user have given to a particular media
+     * @param mediaId
      * @return Double averageRating
      */
-    @GetMapping(value = "/findAverageRatingByMovieId/{movieId}")
-    public ResponseEntity<Double> findAverageRatingByMovieId(
-        @PathVariable long movieId
+    @GetMapping(value = "/findAverageRatingByMediaId/{mediaId}")
+    public ResponseEntity<Double> findAverageRatingByMediaId(
+        @PathVariable long mediaId
     ) {
-        List<Review> reviews = reviewService.findByMovieId(movieId);
+        List<Review> reviews = reviewService.findByMediaId(mediaId);
         if(reviews == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

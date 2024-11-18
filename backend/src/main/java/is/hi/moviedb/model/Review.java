@@ -14,8 +14,8 @@ public class Review {
     @Id
     private String id;
     private Long userId;
-    private Long movieId;
-    private String movieReview;
+    private Long mediaId;
+    private String mediaReview;
     private double rating;
 
     /** Empty constructor */
@@ -23,11 +23,11 @@ public class Review {
     }
 
     /** Constructor */
-    public Review(Long userId,Long movieId,String movieReview,double rating) {
-        this.id = String.valueOf(userId) + "-" + String.valueOf(movieId);
+    public Review(Long userId,Long mediaId,String mediaReview,double rating) {
+        this.id = String.valueOf(userId) + "-" + String.valueOf(mediaId);
         this.userId = userId;
-        this.movieId = movieId;
-        this.movieReview = movieReview;
+        this.mediaId = mediaId;
+        this.mediaReview = mediaReview;
         this.rating = rating;
     }
 
@@ -49,20 +49,20 @@ public class Review {
         this.userId = userId;
     }
 
-    public Long getMovieId() {
-        return movieId;
+    public Long getMediaId() {
+        return mediaId;
     }
 
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
     }
 
-    public String getMovieReview() {
-        return movieReview;
+    public String getMediaReview() {
+        return mediaReview;
     }
 
-    public void setMovieReview(String movieReview) {
-        this.movieReview = movieReview;
+    public void setMediaReview(String mediaReview) {
+        this.mediaReview = mediaReview;
     }
 
     public double getRating() {
