@@ -1,6 +1,7 @@
 package is.hi.moviedb.service;
 
 import is.hi.moviedb.model.User;
+import is.hi.moviedb.model.Review;
 import java.util.List;
 
 public interface UserService {
@@ -17,5 +18,5 @@ public interface UserService {
     List<User> getAllUsers();
 
     Long getUserId(String email);
-
+    List<Review> findTvShowsByUserId(long id);
 }

@@ -267,4 +267,23 @@ public class UserController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
+    /**
+     * Retrieves all tvshows the current user has rated.
+     * @param accessToken
+     * @return
+     */
+    @GetMapping("/me/ratings/tvshows/{id}")
+    public ResponseEntity<List<Review>> getTvShowRatingOfMe(
+        @RequestHeader("Authorization") String accessToken
+    ) {
+        User me = getMe(accessToken).getBody();
+        List<Review> reviews = userService.findTvShowsByUserId(me.getId());
+        if (!reviews.isEmpty()) { // Check if found
+            return ResponseEntity.ok(reviews); // Return the rating with 200 OK status
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not found
+        }
+    }
 }

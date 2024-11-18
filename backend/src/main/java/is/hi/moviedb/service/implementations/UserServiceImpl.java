@@ -8,6 +8,13 @@ import is.hi.moviedb.repository.UserRepository;
 import is.hi.moviedb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import is.hi.moviedb.service.ReviewService;
+import is.hi.moviedb.repository.TvShowRepository;
+import is.hi.moviedb.model.Review;
+import java.util.ArrayList;
+import is.hi.moviedb.model.TvShow;
+import is.hi.moviedb.service.TvShowService;
+
 
 /**
  * Service implementation for managing {@link User} entities.
@@ -20,11 +27,15 @@ public class UserServiceImpl implements UserService {
    * Repository for performing CRUD operations on {@link User} entities.
    */
   private final UserRepository userRepository;
+  private final TvShowService tvShowService;
+  private final ReviewService reviewService;
   private final JwtUtil jwtUtil;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository,TvShowService tvShowService,ReviewService reviewService) {
     this.userRepository = userRepository;
+    this.tvShowService = tvShowService;
+    this.reviewService = reviewService;
     this.jwtUtil = new JwtUtil();
   }
 
@@ -136,5 +147,20 @@ public class UserServiceImpl implements UserService {
       return null;
     }
     return user.getId();
+  }
+
+  @Override
+  public List<Review> findTvShowsByUserId(long id) {
+    List<Review> reviews = reviewService.findByUserId(id);
+    List<Review> shows = new ArrayList<>();
+
+    for (Review review : reviews) {
+      int tvShowId = review.getMovieId().intValue();
+      TvShow show = tvShowService.getTvShowById(tvShowId);
+      if (show != null) {
+        shows.add(review);
+      }
+    }
+    return shows;
   }
 }

@@ -23,6 +23,5 @@ public interface ReviewService {
     List<Review> findAll();
     boolean deleteAll();
     double findRatingById(String id);
-
     double calculateAverageRating(List<Review> reviews);
 }
