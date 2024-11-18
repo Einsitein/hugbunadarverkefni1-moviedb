@@ -64,7 +64,7 @@ export default function SeasonsPage() {
     }
     try {
       await axios.delete(
-        baseURL + `review/deleteReview/${user_id}-${tvshowid}`
+        baseURL + `review/deleteTvShowReview/${user_id}/${tvshowid}`
       );
       setMyRating(null);
     } catch (error) {
@@ -83,7 +83,7 @@ export default function SeasonsPage() {
       user_id = await getUserId();
     }
     try {
-      await axios.patch(baseURL + `review/changeReview`, {
+      await axios.patch(baseURL + `review/changeTvShowReview`, {
         userId: user_id,
         movieId: tvshowid,
         rating: newRating,

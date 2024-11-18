@@ -87,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService{
      * @param id
      * @return true if successfull, false if not
      */
-
+    @Transactional
     @Override
     public boolean deleteReview(String id){
         if (reviewRepository.existsById(id)) {
@@ -97,6 +97,7 @@ public class ReviewServiceImpl implements ReviewService{
         return false; // Review not found
     }
 
+    @Transactional
     @Override
     public boolean deleteSeasonReview(long userId, long seasonId) {
         boolean success = deleteReview(Long.toString(userId) + "-" + Long.toString(seasonId));
@@ -107,7 +108,7 @@ public class ReviewServiceImpl implements ReviewService{
         }
         return success;
     }
-
+    @Transactional
     @Override
     public boolean deleteTvShowReview(long userId, long tvShowId) {
         boolean success = deleteReview(Long.toString(userId) + "-" + Long.toString(tvShowId));
