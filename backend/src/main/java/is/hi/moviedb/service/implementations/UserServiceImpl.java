@@ -130,10 +130,10 @@ public class UserServiceImpl implements UserService {
    * @return User id of the user.
    */
   @Override
-  public Long getUserId(String email){
+  public int getUserId(String email){
     User user = userRepository.findByEmail(email);
     if(user == null){
-      return null;
+      return -1;
     }
     return user.getId();
   }

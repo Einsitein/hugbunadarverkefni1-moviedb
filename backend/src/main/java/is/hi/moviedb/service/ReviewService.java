@@ -6,15 +6,15 @@ public interface ReviewService {
 
     //Hálparföll
     // All the methods that ReviewServiceImpl will implement
-    Review createReview(long userId,long mediaId,String mediaReview,double rating);
-    Review createSeasonReview(long userId,long seasonId,String seasonReview,double rating);
-    Review createTvShowReview(long userId,long tvShowId,String tvShowReview,double rating);
+    Review createReview(int userId,int mediaId,String mediaReview,double rating);
+    Review createSeasonReview(int userId,int seasonId,String seasonReview,double rating);
+    Review createTvShowReview(int userId,int tvShowId,String tvShowReview,double rating);
     boolean deleteReview(String id);
-    Review changeReview(long userId,long mediaId,String mediaReview,double rating);
-    Review findByUserIdAndMediaId(long userId,long mediaId);
+    Review changeReview(int userId,int mediaId,String mediaReview,double rating);
+    Review findByUserIdAndMediaId(int userId,int mediaId);
     Review findById(String id);
-    List<Review> findByUserId(long userId);
-    List<Review> findByMediaId(long mediaId);
+    List<Review> findByUserId(int userId);
+    List<Review> findByMediaId(int mediaId);
     List<Review> findAll();
     boolean deleteAll();
     double findRatingById(String id);

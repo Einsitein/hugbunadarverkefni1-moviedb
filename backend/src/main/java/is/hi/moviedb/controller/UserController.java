@@ -210,7 +210,7 @@ public class UserController {
     public ResponseEntity<List<Review>> getAllRatingsOfUser(
         @PathVariable String user_id
     ) {
-        List<Review> result = reviewService.findByUserId(Long.parseLong(user_id));
+        List<Review> result = reviewService.findByUserId(Integer.parseInt(user_id));
         if(result == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -218,9 +218,9 @@ public class UserController {
     }
 
     @PostMapping("/idbyemail")
-    public ResponseEntity<Long> getEmailById(@RequestBody EmailRequest emailRequest) {
-        Long result = userService.getUserId(emailRequest.getEmail());
-        if (result == null) {
+    public ResponseEntity<Integer> getEmailById(@RequestBody EmailRequest emailRequest) {
+        int result = userService.getUserId(emailRequest.getEmail());
+        if (result == -1) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -255,7 +255,7 @@ public class UserController {
     public ResponseEntity<Double> getAverageRatingOfUser(
         @PathVariable String user_id
     ){
-        List<Review> reviews = reviewService.findByUserId(Long.parseLong(user_id));
+        List<Review> reviews = reviewService.findByUserId(Integer.parseInt(user_id));
         if (reviews == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

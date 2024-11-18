@@ -115,7 +115,7 @@ public class ReviewController {
      * @return Review object if found, 404 if not
      */
     @GetMapping(value = "/findByUserIdAndMediaId/{userId}/{mediaId}")
-    public ResponseEntity<Review> findByUserIdAndMediaId (@PathVariable long userId, @PathVariable long mediaId){
+    public ResponseEntity<Review> findByUserIdAndMediaId (@PathVariable int userId, @PathVariable int mediaId){
         Review review = reviewService.findByUserIdAndMediaId(userId,mediaId); // Assuming this returns a Review
         if (review != null) { // Check if found
             return ResponseEntity.ok(review); // Return the rating with 200 OK status
@@ -130,7 +130,7 @@ public class ReviewController {
      * @return Review object if fould, 404 if not
      */
     @GetMapping(value = "/findByUserId/{userId}")
-    public ResponseEntity<List<Review>> findByUserId(@PathVariable long userId){
+    public ResponseEntity<List<Review>> findByUserId(@PathVariable int userId){
         List<Review> reviews = reviewService.findByUserId(userId); // Assuming this returns List<Review>
         if (!reviews.isEmpty()) { // Check if found
             return ResponseEntity.ok(reviews); // Return the rating with 200 OK status
@@ -145,7 +145,7 @@ public class ReviewController {
      * @return List of Review
      */
     @GetMapping(value = "/findByMediaId/{mediaId}")
-    public ResponseEntity<List<Review>> findByMediaId(@PathVariable long mediaId){
+    public ResponseEntity<List<Review>> findByMediaId(@PathVariable int mediaId){
         List<Review> reviews = reviewService.findByMediaId(mediaId); // Assuming this returns List<Review>
         if (!reviews.isEmpty()) { // Check if found
             return ResponseEntity.ok(reviews); // Return the rating with 200 OK status
@@ -206,7 +206,7 @@ public class ReviewController {
      */
     @GetMapping(value = "/findAverageRatingByMediaId/{mediaId}")
     public ResponseEntity<Double> findAverageRatingByMediaId(
-        @PathVariable long mediaId
+        @PathVariable int mediaId
     ) {
         List<Review> reviews = reviewService.findByMediaId(mediaId);
         if(reviews == null){
