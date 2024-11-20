@@ -7,6 +7,7 @@ export default function MyAccount() {
   const email = jwtDecode(token).sub;
   const [myEmail, setMyEmail] = useState("");
   const [myMovieRatings, setMyMovieRatings] = useState([]);
+  const [myTVRatings, setMyTVRatings] = useState([]);
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordAgain, setNewPasswordAgain] = useState("");
   const baseURL = "http://localhost:8080/";
@@ -58,6 +59,48 @@ export default function MyAccount() {
     }
   };
 
+
+    const fetchMyTVRatings = async () => {
+      let user_id = userId;
+      if (!userId) {
+        user_id = await getUserId();
+      }
+      try {
+        const response = await axios.get(
+          baseURL + `user/me/ratings/tvshows/${user_id}`, {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        const tvRatings = await Promise.all(
+          response.data.map(async (rating_obj) => {
+            try {
+              const tvResponse = await axios.get(
+                baseURL + `tvshows/${rating_obj.movieId}`
+              );
+              return {
+                images: tvResponse.data.images,
+                name: tvResponse.data.name,
+                myRating: rating_obj.rating,
+                ...tvResponse.data,
+              };
+            } catch (error) {
+              console.error("There was an unknown error!", error);
+              return null;
+            }
+          }
+        )
+        );
+        console.log("tvRatings", tvRatings);
+        setMyTVRatings(tvRatings);
+
+
+      } catch (error) {
+        console.error("ifnufnfiunfifnifnijf", error);
+      }
+    };
+
   const fetchAverageRating = async () => {
     let user_id = userId;
     if (!userId) {
@@ -86,8 +129,8 @@ export default function MyAccount() {
         console.error("There was an unknown error!", error);
       }
     };
-   
     fetchMyEmail();
+    fetchMyTVRatings();
     fetchMyMovieRatings();
     fetchAverageRating();
   }, [token]);
@@ -171,16 +214,15 @@ export default function MyAccount() {
         <div>{myEmail}</div>
       </div>
       <div className="movie-ratings">
-        <h2>My Movie Ratings</h2>
-        {averageRating !== null && typeof averageRating === 'number' ? (
+        <h2>My Ratings</h2>
+        {averageRating !== null && typeof averageRating === "number" ? (
           <div className="average-rating">
             Average Rating: {averageRating.toFixed(1)}
           </div>
         ) : (
-          <div className="average-rating">
-            No ratings yet
-          </div>
+          <div className="average-rating">No ratings yet</div>
         )}
+        <h2>My Movie Ratings</h2>
         {myMovieRatings.map((movie, index) => (
           <div key={index} className="movie-rating">
             <img src={movie.images} alt={movie.title} />
@@ -188,6 +230,16 @@ export default function MyAccount() {
               <strong>{movie.name}</strong>
             </div>
             <div>Rating: {movie.myRating}</div>
+          </div>
+        ))}
+        <h2>My TV Ratings</h2>
+        {myTVRatings.map((tv, index) => (
+          <div key={index} className="movie-rating">
+            <img src={tv.images} alt={tv.name} />
+            <div>
+              <strong>{tv.name}</strong>
+            </div>
+            <div>Rating: {tv.myRating}</div>
           </div>
         ))}
         {email === "einar@gmail.com" && (
